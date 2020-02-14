@@ -13,19 +13,19 @@ test-functional: api-test-functional
 test-functional-coverage: api-test-functional-coverage
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down --remove-orphans
+	docker compose down --remove-orphans
 
 docker-down-clear:
-	docker-compose down -v --remove-orphans
+	docker compose down -v --remove-orphans
 
 docker-pull:
-	docker-compose pull
+	docker compose pull
 
 docker-build:
-	docker-compose build
+	docker compose build
 
 api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/*'
@@ -36,32 +36,32 @@ api-permissions:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod 777 var
 
 api-composer-install:
-	docker-compose run --rm api-php-cli composer install
+	docker compose run --rm api-php-cli composer install
 
 api-lint:
-	docker-compose run --rm api-php-cli composer lint
-	docker-compose run --rm api-php-cli composer cs-check
+	docker compose run --rm api-php-cli composer lint
+	docker compose run --rm api-php-cli composer cs-check
 
 api-analyze:
-	docker-compose run --rm api-php-cli composer psalm
+	docker compose run --rm api-php-cli composer psalm
 
 api-test:
-	docker-compose run --rm api-php-cli composer test
+	docker compose run --rm api-php-cli composer test
 
 api-test-coverage:
-	docker-compose run --rm api-php-cli composer test-coverage
+	docker compose run --rm api-php-cli composer test-coverage
 
 api-test-unit:
-	docker-compose run --rm api-php-cli composer test -- --testsuite=unit
+	docker compose run --rm api-php-cli composer test -- --testsuite=unit
 
 api-test-unit-coverage:
-	docker-compose run --rm api-php-cli composer test-coverage -- --testsuite=unit
+	docker compose run --rm api-php-cli composer test-coverage -- --testsuite=unit
 
 api-test-functional:
-	docker-compose run --rm api-php-cli composer test -- --testsuite=functional
+	docker compose run --rm api-php-cli composer test -- --testsuite=functional
 
 api-test-functional-coverage:
-	docker-compose run --rm api-php-cli composer test-coverage -- --testsuite=functional
+	docker compose run --rm api-php-cli composer test-coverage -- --testsuite=functional
 
 build: build-gateway build-frontend build-api
 
@@ -100,13 +100,13 @@ deploy:
 	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && echo "REGISTRY=${REGISTRY}" >> .env'
 	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
 	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && echo "API_DB_PASSWORD=${API_DB_PASSWORD}" >> .env'
-	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker-compose pull'
-	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker-compose up --build --remove-orphans -d'
+	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker compose pull'
+	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker compose up --build --remove-orphans -d'
 	ssh ${HOST} -p ${PORT} 'rm -f site'
 	ssh ${HOST} -p ${PORT} 'ln -sr site_${BUILD_NUMBER} site'
 
 rollback:
-	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker-compose pull'
-	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker-compose up --build --remove-orphans -d'
+	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker compose pull'
+	ssh ${HOST} -p ${PORT} 'cd site_${BUILD_NUMBER} && docker compose up --build --remove-orphans -d'
 	ssh ${HOST} -p ${PORT} 'rm -f site'
 	ssh ${HOST} -p ${PORT} 'ln -sr site_${BUILD_NUMBER} site'
