@@ -37,18 +37,27 @@ class User
      * @ORM\Column(type="auth_user_status", length=16)
      */
     private Status $status;
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $joinConfirmToken = null;
-    private ArrayObject $networks;
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $passwordResetToken = null;
     /**
      * @ORM\Column(type="auth_user_email", nullable=true)
      */
     private ?Email $newEmail = null;
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $newEmailToken = null;
     /**
      * @ORM\Column(type="auth_user_role", length=16)
      */
     private Role $role;
+    private ArrayObject $networks;
 
     private function __construct(Id $id, DateTimeImmutable $date, Email $email, Status $status)
     {
